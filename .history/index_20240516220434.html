@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js Express MongoDB Flowbite Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@1.0.3/dist/flowbite.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Add Item</h1>
+        <form id="addItemForm">
+            <div class="field">
+                <label class="label">Name</label>
+                <input class="input" type="text" id="name" name="name" required>
+            </div>
+            <div class="field">
+                <label class="label">Description</label>
+                <textarea class="textarea" id="description" name="description" required></textarea>
+            </div>
+            <button class="button is-primary">Add Item</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('addItemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+
+            try {
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, description })
+                });
+
+                if (response.ok) {
+                    alert('Item added successfully');
+                    document.getElementById('addItemForm').reset();
+                } else {
+                    const errorMessage = await response.text();
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while adding the item');
+            }
+        });
+    </script>
+</body>
+</html>
